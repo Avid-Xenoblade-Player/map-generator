@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Grid</title>
+  <style>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(100, 1fr);
+      grid-gap:0px; /* Adjust gap between cells */
+      width: 400px; /* Adjust grid width as needed */
+      height:400px; /* Adjust grid height as needed */
+    }
+    .cell {
+      background-color: #fff; /* Default background color */
+      border: 0px solid #ddd;
+      text-align: center;
+      line-height: 50px; /* Center text vertically */
+    }
+    .ocean {
+      background-color: #00008b;
+    }
+    .black {
+      background-color: #90ee90;
+    }
+    .blue {
+      background-color: #00008c
+    }
+    .grey {
+      background-color: #777777
+    }
+    .river {
+      background-color: #0E87CC
+    }
+  </style>
+</head>
+<body>
+  <div class="grid" id="grid-container"></div>
+  <script src="script.js"></script> </body>
+</html>
+
+
