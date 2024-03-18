@@ -145,7 +145,8 @@ function updateCell(x, y) {
       	newState = WeatherState.BLACK;
       }
       if((stateCounts[WeatherState.RIVER] < 2) &&
-      	 getCell(x, y - 1) == WeatherState.RIVER) {
+      	 (getCell(x, y - 1) == WeatherState.RIVER) &&
+         (getCell(x - 1, y - 2) !== WeatherState.BLACK) {
          newState = WeatherState.RIVER;
          }
     break;
