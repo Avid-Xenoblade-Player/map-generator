@@ -4,6 +4,7 @@ const WeatherState = {
   BLUE: "blue",
   MOUNTAIN:"grey",
   SNOW: "snow",
+  RIVER: "river",
 };
 
 // Grid size
@@ -39,11 +40,12 @@ function setCell(x, y, state) {
 
 function initializeGrid() {
   const weatherProbabilities = {
-    [WeatherState.WHITE]: 0.37, // 45% chance
-    [WeatherState.BLACK]: 0.63, // 55% chance
+    [WeatherState.WHITE]: 0.34, // 34% chance
+    [WeatherState.BLACK]: 0.63, // 63% chance
     [WeatherState.BLUE]: 0.0, // 0% chance
     [WeatherState.MOUNTAIN]: 0.0, // 0% chance
     [WeatherState.SNOW]: 0.0, // 0% chance
+    [WeatherState.RIVER]: 0.0, // 0% chance
   };
 
   for (let x = 0; x < gridSize; x++) {
@@ -74,6 +76,7 @@ function updateCell(x, y) {
     [WeatherState.BLUE]: 0,
     [WeatherState.MOUNTAIN]: 0,
     [WeatherState.SNOW]: 0,
+    [WeatherState.RIVER]: 0,
    };
 
   for (let dx = -1; dx <= 1; dx++) {
@@ -89,6 +92,11 @@ function updateCell(x, y) {
  
   // Apply transition rules based on current state and surroundings
   switch (currentState) {
+  	case WeatherState.RIVER:
+    	if ((stateCounts[WeatherState.BLUE] + stateCounts[WeatherState.WHITE]) > 1) {
+      	newState = WeatherState.WHITE;
+      }
+    break;
   	case WeatherState.SNOW:
     	if (stateCounts[WeatherState.MOUNTAIN] > 0) {
        newState = WeatherState.SNOW;
@@ -100,6 +108,13 @@ function updateCell(x, y) {
       if (stateCounts[WeatherState.BLACK] > 1) {
        newState = WeatherState.MOUNTAIN;
       }
+      if ((stateCounts[WeatherState.SNOW] == 4) &&
+      		(getCell (x - 1, y - 1) == WeatherState.SNOW) ||
+          (getCell (x - 1, y + 1) == WeatherState.SNOW) &&
+          (getCell (x + 1, y - 1) == WeatherState.SNOW) ||
+          (getCell (x + 1, y + 1) == WeatherState.SNOW)) {
+      	newState = WeatherState.RIVER;
+      }
     break;
     
   	case WeatherState.MOUNTAIN:
@@ -110,21 +125,29 @@ function updateCell(x, y) {
       }
       if (stateCounts[WeatherState.MOUNTAIN] > 3 &&
       		(getCell(x + 4, y + 4) == WeatherState.MOUNTAIN ||
-           getCell(x + 4, y + 4) == WeatherState.SNOW) &&
+           getCell(x + 4, y + 4) == WeatherState.SNOW ||
+           getCell(x + 4, y + 4) == WeatherState.RIVER) &&
           (getCell(x + 4, y - 4) == WeatherState.MOUNTAIN ||
-           getCell(x + 4, y - 4) == WeatherState.SNOW) &&
+           getCell(x + 4, y - 4) == WeatherState.SNOW ||
+           getCell(x + 4, y - 4) == WeatherState.RIVER) &&
           (getCell(x - 4, y + 4) == WeatherState.MOUNTAIN ||
-           getCell(x - 4, y + 4) == WeatherState.SNOW) &&
+           getCell(x - 4, y + 4) == WeatherState.SNOW ||
+           getCell(x - 4, y + 4) == WeatherState.RIVER) &&
           (getCell(x - 4, y - 4) == WeatherState.MOUNTAIN ||
-           getCell(x - 4, y - 4) == WeatherState.SNOW) &&
+           getCell(x - 4, y - 4) == WeatherState.SNOW ||
+           getCell(x - 4, y - 4) == WeatherState.RIVER) &&
            stateCounts[WeatherState.BLACK] < 1) {
-      	newState = WeatherState.SNOW;
+        newState = WeatherState.SNOW;
       } else {
       	newState = WeatherState.MOUNTAIN;
       }
       if (stateCounts[WeatherState.WHITE] > 0) {
       	newState = WeatherState.BLACK;
       }
+      if((stateCounts[WeatherState.RIVER] < 2) &&
+      	 getCell(x, y - 1) == WeatherState.RIVER) {
+         newState = WeatherState.RIVER;
+         }
     break;
     case WeatherState.WHITE:
      if (stateCounts[WeatherState.BLACK] > stateCounts[WeatherState.WHITE]) {
@@ -176,6 +199,10 @@ function updateCell(x, y) {
          	getCell(x, y - 1) == WeatherState.BLUE)) {
           newState = WeatherState.BLUE;
           }
+      if((stateCounts[WeatherState.RIVER] < 2) &&
+      	 getCell(x, y - 1) == WeatherState.RIVER) {
+         newState = WeatherState.RIVER;
+         }
      break;
     case WeatherState.BLUE:
      	if (stateCounts[WeatherState.BLACK] > (stateCounts[WeatherState.WHITE] + stateCounts[WeatherState.BLUE])) {
