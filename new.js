@@ -43,7 +43,7 @@ function initializeGrid() {
     [WeatherState.BLACK]: 0.55, // 55% chance
     [WeatherState.BLUE]: 0.0, // 0% chance
     [WeatherState.MOUNTAIN]: 0.0, // 0% chance
-    [WeatherState.SNOW]: 0.0 // 0% chance
+    [WeatherState.SNOW]: 0.0, // 0% chance
   };
 
   for (let x = 0; x < gridSize; x++) {
@@ -74,7 +74,7 @@ function updateCell(x, y) {
     [WeatherState.BLUE]: 0,
     [WeatherState.MOUNTAIN]: 0,
     [WeatherState.SNOW]: 0,
-  };
+   };
 
   for (let dx = -1; dx <= 1; dx++) {
     for (let dy = -1; dy <= 1; dy++) {
@@ -86,7 +86,7 @@ function updateCell(x, y) {
       stateCounts[neighborState]++;
     }
   }
-
+ 
   // Apply transition rules based on current state and surroundings
   switch (currentState) {
   	case WeatherState.SNOW:
@@ -109,14 +109,14 @@ function updateCell(x, y) {
       	newState = WeatherState.MOUNTAIN;
       }
       if (stateCounts[WeatherState.MOUNTAIN] > 3 &&
-      		(getCell(x + 3, y + 3) == WeatherState.MOUNTAIN ||
-           getCell(x + 3, y + 3) == WeatherState.SNOW) &&
-          (getCell(x + 3, y - 3) == WeatherState.MOUNTAIN ||
-           getCell(x + 3, y - 3) == WeatherState.SNOW) &&
-          (getCell(x - 3, y + 3) == WeatherState.MOUNTAIN ||
-           getCell(x - 3, y + 3) == WeatherState.SNOW) &&
-          (getCell(x - 3, y - 3) == WeatherState.MOUNTAIN ||
-           getCell(x - 3, y - 3) == WeatherState.SNOW) &&
+      		(getCell(x + 4, y + 4) == WeatherState.MOUNTAIN ||
+           getCell(x + 4, y + 4) == WeatherState.SNOW) &&
+          (getCell(x + 4, y - 4) == WeatherState.MOUNTAIN ||
+           getCell(x + 4, y - 4) == WeatherState.SNOW) &&
+          (getCell(x - 4, y + 4) == WeatherState.MOUNTAIN ||
+           getCell(x - 4, y + 4) == WeatherState.SNOW) &&
+          (getCell(x - 4, y - 4) == WeatherState.MOUNTAIN ||
+           getCell(x - 4, y - 4) == WeatherState.SNOW) &&
            stateCounts[WeatherState.BLACK] < 1) {
       	newState = WeatherState.SNOW;
       } else {
