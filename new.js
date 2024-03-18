@@ -93,6 +93,10 @@ function updateCell(x, y) {
     	if (stateCounts[WeatherState.MOUNTAIN] > 0) {
        newState = WeatherState.RIVER;
       }
+      if (stateCounts[WeatherState.RIVER] < 1 &&
+      		stateCounts[WeatherState.WHITE] > 0) {
+      	newState = WeatherState.WHITE;
+      }
     break;
     
   	case WeatherState.MOUNTAIN:
@@ -130,6 +134,9 @@ function updateCell(x, y) {
      		 stateCounts[WeatherState.BLUE] == 0) {
      	newState = WeatherState.BLUE;
      }
+     if (stateCounts[WeatherState.MOUNTAIN] > 3) {
+     	newState = WeatherState.MOUNTAIN;
+     }
       break;
     case WeatherState.BLACK:
       if (stateCounts[WeatherState.BLACK] > stateCounts[WeatherState.WHITE]) {
@@ -153,7 +160,7 @@ function updateCell(x, y) {
           stateCounts[WeatherState.BLUE] == 0) {
      	newState = WeatherState.MOUNTAIN;
      }
-     if (stateCounts[WeatherState.RIVER] > 1) {
+     if (stateCounts[WeatherState.BLACK] < 1) {
      	newState = WeatherState.RIVER;
      }
      break;
