@@ -39,8 +39,8 @@ function setCell(x, y, state) {
 
 function initializeGrid() {
   const weatherProbabilities = {
-    [WeatherState.WHITE]: 0.45, // 45% chance
-    [WeatherState.BLACK]: 0.55, // 55% chance
+    [WeatherState.WHITE]: 0.37, // 45% chance
+    [WeatherState.BLACK]: 0.63, // 55% chance
     [WeatherState.BLUE]: 0.0, // 0% chance
     [WeatherState.MOUNTAIN]: 0.0, // 0% chance
     [WeatherState.SNOW]: 0.0, // 0% chance
@@ -164,15 +164,21 @@ function updateCell(x, y) {
      			getCell(x + 7, y) == WeatherState.MOUNTAIN) &&
          (getCell(x - 7, y) == WeatherState.BLACK ||
      			getCell(x - 7, y) == WeatherState.MOUNTAIN) &&
-          stateCounts[WeatherState.BLUE] == 0) {
+         stateCounts[WeatherState.BLUE] == 0) {
      	newState = WeatherState.MOUNTAIN;
      }
      if (stateCounts[WeatherState.BLACK] < 1) {
      	newState = WeatherState.SNOW;
      }
+     if ((getCell(x, y + 1) == WeatherState.WHITE ||
+     		 getCell(x, y + 1) == WeatherState.BLUE) &&
+         (getCell(x, y - 1) == WeatherState.WHITE ||
+         	getCell(x, y - 1) == WeatherState.BLUE)) {
+          newState = WeatherState.BLUE;
+          }
      break;
     case WeatherState.BLUE:
-     	if (stateCounts[WeatherState.BLACK] > stateCounts[WeatherState.WHITE]) {
+     	if (stateCounts[WeatherState.BLACK] > (stateCounts[WeatherState.WHITE] + stateCounts[WeatherState.BLUE])) {
      	newState = WeatherState.BLACK;
      }
      if (stateCounts[WeatherState.WHITE] > stateCounts[WeatherState.BLACK]) {
@@ -180,6 +186,9 @@ function updateCell(x, y) {
      }
      if (stateCounts[WeatherState.WHITE] > 1 &&
          stateCounts[WeatherState.BLACK] > 1) {
+     	newState = WeatherState.BLUE;
+     }
+     if ((stateCounts[WeatherState.BLUE] + stateCounts[WeatherState.WHITE]) == stateCounts[WeatherState.BLACK]) {
      	newState = WeatherState.BLUE;
      }
      break;
@@ -217,4 +226,4 @@ function updateGrid() {
 setInterval(() => {
   updateGrid();
   updateDisplay();
-}, 500);
+}, 0);
